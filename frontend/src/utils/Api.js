@@ -96,7 +96,7 @@ export const api = new Api({
    baseUrl: 'https://api.roman.m.students.nomoreparties.sbs',
    headers() {
       return {
-         Accept: 'application/json',
+        // Accept: 'application/json',
          authorization: `Bearer ${localStorage.getItem('jwt')}`,
          'Content-Type': 'application/json'
       }

@@ -1,5 +1,6 @@
 export const BASE_URL = 'https://api.roman.m.students.nomoreparties.sbs';
 
+
 const checkResponse = (res) => {
    if (res.ok) {
       return res.json();
