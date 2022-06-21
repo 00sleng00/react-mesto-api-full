@@ -1,5 +1,5 @@
 {
-  "name": "api-mesto",
+  "name": "express-mesto-gha",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
@@ -30,11 +30,7 @@
     "validator": "^13.7.0",
     "celebrate": "^15.0.1",
     "joi": "^17.6.0",
-    "cookie-parser": "^1.4.6",
-    "cors": "^2.8.5",
-    "express-winston": "^4.2.0",
-    "winston": "^3.7.2",
-    "dotenv": "^16.0.1"
+    "cookie-parser": "^1.4.6"
   },
   "devDependencies": {
     "eslint": "^8.16.0",
