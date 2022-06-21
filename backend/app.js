@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const cors = require('cors');
+// const cors = require('cors');
 require('dotenv').config();
 const { errors, celebrate, Joi } = require('celebrate');
 
@@ -27,17 +27,17 @@ const limiter = rateLimit({
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
-const corsOptions = {
-  origin: '*',
-  credentials: true,
-  optionSuccessStatus: 200,
-};
+// const corsOptions = {
+//   origin: '*',
+//   credentials: true,
+//   optionSuccessStatus: 200,
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-app.use(cors());
+// app.use(cors());
 
 app.use(limiter);
 
