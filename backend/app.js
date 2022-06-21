@@ -3,11 +3,10 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const cors = require('cors');
+const { errors, celebrate, Joi } = require('celebrate');
+const cors = require('./middlewares/cors');
 
 require('dotenv').config();
-
-const { errors, celebrate, Joi } = require('celebrate');
 
 const { PORT = 3000 } = process.env;
 const { userRoutes } = require('./routes/users');
@@ -21,6 +20,7 @@ const app = express();
 
 app.use(helmet());
 app.use(express.json());
+app.use(cors);
 app.use(cookieParser());
 
 const limiter = rateLimit({
@@ -30,19 +30,16 @@ const limiter = rateLimit({
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
-const corsOptions = {
-  origin: '*',
-  credentials: true,
-  optionSuccessStatus: 200,
-};
-
-app.use(cors(corsOptions));
-
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
-app.use(cors());
 app.use(requestLogger);
 app.use(limiter);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
