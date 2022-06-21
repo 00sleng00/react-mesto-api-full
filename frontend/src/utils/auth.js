@@ -1,4 +1,4 @@
-export const BASE_URL = "roman.m.students.nomoredomains.xyz";
+export const BASE_URL = "api.roman.m.students.nomoreparties.sbs";
 
 const checkResponse = (res) => {
    if (res.ok) {
