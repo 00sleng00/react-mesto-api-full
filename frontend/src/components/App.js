@@ -130,9 +130,7 @@ const App = () => {
                 .getContent(token)
                 .then((res) => {
                     if (res) {
-                        setData({
-                            email: res.data.email,
-                        });
+                        setData(res.email);
                     }
 
                     history.push('/');
