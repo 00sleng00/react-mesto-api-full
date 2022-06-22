@@ -1,8 +1,11 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const cors = require('cors');
 const { errors, celebrate, Joi } = require('celebrate');
 
 const { PORT = 3000 } = process.env;
@@ -10,13 +13,10 @@ const { userRoutes } = require('./routes/users');
 const { cardRoutes } = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/NotFoundError');
 
 const app = express();
-
-app.use(helmet());
-app.use(express.json());
-app.use(cookieParser());
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -25,10 +25,20 @@ const limiter = rateLimit({
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
-// Apply the rate limiting middleware to all requests
-app.use(limiter);
+const corsOptions = {
+  origin: '*',
+  credentials: true,
+  optionSuccessStatus: 200,
+};
 
+app.use(cors(corsOptions));
+app.use(helmet());
+app.use(cookieParser());
+app.use(express.json());
 mongoose.connect('mongodb://localhost:27017/mestodb');
+app.use(cors());
+app.use(requestLogger);
+app.use(limiter);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -56,6 +66,7 @@ app.all('*', auth, (_req, _res, next) => {
   next(new NotFoundError('Страница не  найдена'));
 });
 
+app.use(errorLogger);
 app.use(errors());
 
 app.listen(PORT, () => {
