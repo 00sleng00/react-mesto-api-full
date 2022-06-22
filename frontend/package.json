@@ -1,5 +1,6 @@
 {
-  "name": "react-mesto",
+  "homepage": "https://github.com/00sleng00/react-mesto-auth/",
+  "name": "react-mesto-auth",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -17,7 +18,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && scp -r ./build/* roman@51.250.85.51:/home/roman/react-mesto-api-full/frontend"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [

@@ -40,7 +40,7 @@ class Api {
          .then(this._checkRequest)
    }
 
-   editAvatar({ avatar }) {
+   editAvatar({avatar}) {
       return fetch(`${this._baseUrl}/users/me/avatar`, {
          method: "PATCH",
          headers: this._headers,
@@ -92,13 +92,10 @@ class Api {
    }
 }
 
-export const api = new Api({
-   baseUrl: 'https://api.roman.m.students.nomoreparties.sbs',
-   headers() {
-      return {
-         Accept: 'application/json',
-         authorization: `Bearer ${localStorage.getItem('jwt')}`,
-         'Content-Type': 'application/json'
-      }
+export const api = new Api ({
+   baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-37',
+   headers: {
+      authorization: '21f71f02-2b30-453e-b34c-930853c71700',
+      'Content-Type': 'application/json'
    }
 });

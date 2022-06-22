@@ -1,5 +1,4 @@
-export const BASE_URL = 'https://api.roman.m.students.nomoreparties.sbs';
-
+export const BASE_URL = "https://auth.nomoreparties.co";
 
 const checkResponse = (res) => {
    if (res.ok) {
@@ -17,7 +16,6 @@ export const register = (email, password) => {
       body: JSON.stringify({ email, password }),
    }).then(checkResponse);
 };
-
 
 export const authorize = (email, password) => {
    return fetch(`${BASE_URL}/signin`, {

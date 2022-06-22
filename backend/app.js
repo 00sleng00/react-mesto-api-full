@@ -1,19 +1,15 @@
-require('dotenv').config();
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { errors, celebrate, Joi } = require('celebrate');
-const cors = require('./middlewares/cors');
 
 const { PORT = 3000 } = process.env;
 const { userRoutes } = require('./routes/users');
 const { cardRoutes } = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/NotFoundError');
 
 const app = express();
@@ -21,7 +17,6 @@ const app = express();
 app.use(helmet());
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -34,14 +29,6 @@ const limiter = rateLimit({
 app.use(limiter);
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
-
-app.use(requestLogger);
-
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -68,8 +55,6 @@ app.use('/cards', auth, cardRoutes);
 app.all('*', auth, (_req, _res, next) => {
   next(new NotFoundError('Страница не  найдена'));
 });
-
-app.use(errorLogger);
 
 app.use(errors());
 
