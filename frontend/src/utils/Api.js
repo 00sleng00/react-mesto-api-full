@@ -95,12 +95,12 @@ class Api {
 }
 
 export const api = new Api({
-   baseUrl:  "https://api.roman.m.students.nomoreparties.sbs",
-   headers() {
-      return {
-         Accept: 'application/json',
-         authorization: `Bearer ${getToken()}`,
-         'Content-Type': 'application/json'
+   baseUrl: "https://api.roman.m.students.nomoreparties.sbs",
+   headers: function() {
+      return{
+      Accept: 'application/json',
+      authorization: `Bearer ${getToken()}`,
+      'Content-Type': 'application/json'
       }
    }
 });
