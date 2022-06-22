@@ -1,4 +1,4 @@
-export const BASE_URL = "https://api.roman.m.students.nomoreparties.sbs";
+export const BASE_URL = "https://auth.nomoreparties.co";
 
 const checkResponse = (res) => {
    if (res.ok) {
