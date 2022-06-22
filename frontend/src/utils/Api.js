@@ -94,11 +94,11 @@ class Api {
 
 export const api = new Api({
    baseUrl: 'https://api.roman.m.students.nomoreparties.sbs',
-   // headers() {
-   //    return {
-   //       Accept: 'application/json',
-   //       authorization: `Bearer ${localStorage.getItem('jwt')}`,
-   //       'Content-Type': 'application/json'
-   //    }
-  // }
+   headers() {
+      return {
+         Accept: 'application/json',
+         authorization: `Bearer ${localStorage.getItem('jwt')}`,
+         'Content-Type': 'application/json'
+      }
+   }
 });
