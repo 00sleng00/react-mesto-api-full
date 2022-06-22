@@ -87,7 +87,7 @@ const App = () => {
     const switchToLoggedIn = (email) => {
         setIsLogin(true);
         setData(email);
-        history("/");
+        history.push("/");
         return isLogin
     };
 
