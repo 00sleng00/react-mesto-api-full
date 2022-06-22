@@ -93,7 +93,7 @@ class Api {
 }
 
 export const api = new Api({
-   baseUrl: 'api.roman.m.students.nomoreparties.sbs',
+   baseUrl:  "https://api.roman.m.students.nomoreparties.sbs",
    headers() {
       return {
          Accept: 'application/json',
