@@ -45,7 +45,7 @@ const App = () => {
             password: "",
         });
         setIsLogin(false);
-        history.push("/sign-in");
+        history.push("/signin");
     };
 
     const handleRegister = (email, password) => {
@@ -53,7 +53,7 @@ const App = () => {
             .then(() => {
                 setTooltipPopup(true);
                 setOnInfoTooltip(true);
-                history.push("/sign-in");
+                history.push("/signin");
             })
             .catch((res) => {
                 console.log(res);
@@ -92,7 +92,7 @@ const App = () => {
                             setIsLogin(true);
                             history.push("/");
                         } else {
-                            history.push("/sign-in");
+                            history.push("/signin");
                         }
                     })
                     .catch((err) => console.error(err));
@@ -231,11 +231,11 @@ const App = () => {
                         exact
                         path="/"
                     />
-                    <Route path="/sign-in">
+                    <Route path="/signin">
                         <Login handleLogin={handleLogin} />
                     </Route>
 
-                    <Route path="/sign-up">
+                    <Route path="/signup">
                         <Register handleRegister={handleRegister} />
                     </Route>
 
@@ -243,7 +243,7 @@ const App = () => {
                         {isLogin ? (
                             <Redirect to="/" />
                         ) : (
-                            <Redirect to="/sign-in" />
+                            <Redirect to="/signin" />
                         )}
                     </Route>
                 </Switch>
