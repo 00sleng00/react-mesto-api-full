@@ -52,27 +52,85 @@ const App = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLogin]);
 
-    // React.useEffect(() => {
-    //     function initialCards() {
-    //         api.getInitialCards()
-    //             .then((item) => {
-    //                 setCards(item);
-    //             })
-    //             .catch((err) => console.log(`Ошибка: ${err}`));
-    //     }
-    //     isLogin && initialCards();
-    // }, [isLogin]);
+    function handleCardClick(card) {
+        setSelectedCard(card);
+    }
 
+    function handleEditProfileClick() {
+        setIsEditProfilePopupOpen(true);
+    }
 
-    const signOut = () => {
-        removeToken();
-        setData({
-            email: "",
-            password: "",
-        });
-        setIsLogin(false);
-        history.push("/sign-in");
+    function handleAddPlaceClick() {
+        setIsAddPlacePopupOpen(true);
+    }
+
+    function handleEditAvatarClick() {
+        setIsEditAvatarPopupOpen(true);
+    }
+
+    const handleUpdateUser = (name, about) => {
+        api.editProfile(name, about)
+            .then((item) => {
+                setCurrentUser(item);
+                closeAllPopups();
+            })
+            .catch((err) =>
+                console.log(`Ошибка ${err}`)
+            );
     };
+
+    const handleUpdateAvatar = (avatar) => {
+        api.editAvatar(avatar)
+            .then((item) => {
+                setCurrentUser(item);
+                closeAllPopups();
+            })
+            .catch((err) =>
+                console.log(`Ошибка ${err}`)
+            );
+    };
+
+    const handleCardLike = (card) => {
+        const isLiked = card.likes.some((i) => i._id === currentUser._id);
+        const changeLikeCardStatus = !isLiked
+            ? api.addLike(card._id)
+            : api.deleteLike(card._id);
+        changeLikeCardStatus
+            .then((newCard) => {
+                setCards((item) =>
+                    item.map((c) => (c._id === card._id ? newCard : c))
+                );
+            })
+            .catch((err) => console.log(`Ошибка ${err}`));
+    };
+
+    const handleCardDelete = (card) => {
+        api.deleteCard(card._id)
+            .then(() => {
+                setCards((cards) => cards.filter((c) => c._id !== card._id));
+            })
+            .catch((err) => console.log(`Ошибка ${err}`));
+    };
+
+    const handleAddPlaceSubmit = (name, link) => {
+        api.addCard(name, link)
+            .then((newCard) => {
+                setCards([newCard, ...cards]);
+                closeAllPopups();
+            })
+            .catch((err) =>
+                console.log(`Ошибка ${err}`)
+            );
+    };
+
+    function closeAllPopups() {
+        setIsEditAvatarPopupOpen(false);
+        setIsAddPlacePopupOpen(false);
+        setIsEditProfilePopupOpen(false);
+        setSelectedCard({});
+        setTooltipPopup(false);
+    }
+
 
     const handleRegister = (email, password) => {
         auth.register(email, password)
@@ -105,6 +163,33 @@ const App = () => {
             });
     };
 
+    function handleTokenCheck() {
+        const token = localStorage.getItem("jwt");
+        if (token) {
+            setIsLogin(true);
+            auth
+                .getContent(token)
+                .then((res) => {
+                    if (res) {
+                        setData(res.email);
+                    }
+
+                    history.push('/');
+                })
+                .catch((err) => console.log(err));
+        }
+    }
+
+    const signOut = () => {
+        removeToken();
+        setData({
+            email: "",
+            password: "",
+        });
+        setIsLogin(false);
+        history.push("/sign-in");
+    };
+
     // React.useEffect(() => {
     //     const tokenCheck = () => {
     //         const jwt = getToken();
@@ -126,106 +211,6 @@ const App = () => {
     //     };
     //     tokenCheck();
     // }, [history, isLogin]);
-
-
-    function handleTokenCheck() {
-        const token = localStorage.getItem("jwt");
-        if (token) {
-            setIsLogin(true);
-            auth
-                .getContent(token)
-                .then((res) => {
-                    if (res) {
-                        setData(res.email);
-                    }
-
-                    history.push('/');
-                })
-                .catch((err) => console.log(err));
-        }
-    }
-
-
-    function handleCardClick(card) {
-        setSelectedCard(card);
-    }
-
-    function handleEditProfileClick() {
-        setIsEditProfilePopupOpen(true);
-    }
-
-    function handleAddPlaceClick() {
-        setIsAddPlacePopupOpen(true);
-    }
-
-    function handleEditAvatarClick() {
-        setIsEditAvatarPopupOpen(true);
-    }
-
-    function closeAllPopups() {
-        setIsEditAvatarPopupOpen(false);
-        setIsAddPlacePopupOpen(false);
-        setIsEditProfilePopupOpen(false);
-        setSelectedCard({});
-        setTooltipPopup(false);
-    }
-
-
-    const handleUpdateUser = (name, about) => {
-        api.editProfile(name, about)
-            .then((item) => {
-                setCurrentUser(item);
-                closeAllPopups();
-            })
-            .catch((err) =>
-                console.log(`Ошибка ${err}`)
-            );
-    };
-
-    const handleUpdateAvatar = (avatar) => {
-        api.editAvatar(avatar)
-            .then((item) => {
-                setCurrentUser(item);
-                closeAllPopups();
-            })
-            .catch((err) =>
-                console.log(`Ошибка ${err}`)
-            );
-    };
-
-    const handleAddPlaceSubmit = (name, link) => {
-        api.addCard(name, link)
-            .then((newCard) => {
-                setCards([newCard, ...cards]);
-                closeAllPopups();
-            })
-            .catch((err) =>
-                console.log(`Ошибка ${err}`)
-            );
-    };
-
-    const handleCardLike = (card) => {
-        const isLiked = card.likes.some((i) => i._id === currentUser._id);
-        const changeLikeCardStatus = !isLiked
-            ? api.addLike(card._id)
-            : api.deleteLike(card._id);
-        changeLikeCardStatus
-            .then((newCard) => {
-                setCards((item) =>
-                    item.map((c) => (c._id === card._id ? newCard : c))
-                );
-            })
-            .catch((err) => console.log(`Ошибка ${err}`));
-    };
-
-
-    const handleCardDelete = (card) => {
-        api.deleteCard(card._id)
-            .then(() => {
-                setCards((cards) => cards.filter((c) => c._id !== card._id));
-            })
-            .catch((err) => console.log(`Ошибка ${err}`));
-    };
 
     // React.useEffect(() => {
     //     function handleUserInfo() {
