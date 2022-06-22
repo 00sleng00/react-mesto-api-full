@@ -1,4 +1,4 @@
-export const BASE_URL = 'https://api.roman.m.students.nomoreparties.sbs';
+export const BASE_URL = 'https://roman.m.students.nomoredomains.xyz';
 
 
 const checkResponse = (res) => {
