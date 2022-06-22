@@ -75,32 +75,39 @@ class Api {
 
    }
 
-   deleteLike(id) {
-      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-         method: "DELETE",
-         headers: this._headers()
-      })
-         .then(this._checkRequest)
-
+   changeLikeCardStatus(id, isLiked) {
+      return fetch(`${this._baseUrl}/cards/${id}/likes/`, {
+         method: isLiked ? "PUT" : "DELETE",
+         headers: this._headers(),
+      }).then(this._checkRequest);
    }
 
-   addLike(id) {
-      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-         method: "PUT",
-         headers: this._headers()
-      })
-         .then(this._checkRequest)
+   // deleteLike(id) {
+   //    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+   //       method: "DELETE",
+   //       headers: this._headers()
+   //    })
+   //       .then(this._checkRequest)
 
-   }
+   // }
+
+   // addLike(id) {
+   //    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+   //       method: "PUT",
+   //       headers: this._headers()
+   //    })
+   //       .then(this._checkRequest)
+
+   // }
 }
 
 export const api = new Api({
    baseUrl: "https://api.roman.m.students.nomoreparties.sbs",
    headers() {
-      return{
-      Accept: 'application/json',
-      authorization: `Bearer ${getToken()}`,
-      'Content-Type': 'application/json'
+      return {
+         Accept: 'application/json',
+         authorization: `Bearer ${getToken()}`,
+         'Content-Type': 'application/json'
       }
    }
 });
