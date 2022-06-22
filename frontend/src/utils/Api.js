@@ -96,7 +96,7 @@ class Api {
 
 export const api = new Api({
    baseUrl: "https://api.roman.m.students.nomoreparties.sbs",
-   headers: function() {
+   headers() {
       return{
       Accept: 'application/json',
       authorization: `Bearer ${getToken()}`,
