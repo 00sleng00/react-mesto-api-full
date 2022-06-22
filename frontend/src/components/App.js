@@ -85,9 +85,9 @@ const App = () => {
             if (jwt) {
                 auth.getContent(jwt)
                     .then((res) => {
-                        if (res && res.data.email) {
+                        if (res && res.email) {
                             setData({
-                                email: res.data.email,
+                                email: res.email,
                             });
                             setIsLogin(true);
                             history.push("/");
@@ -205,6 +205,7 @@ const App = () => {
         }
         isLogin && initialCards();
     }, [isLogin]);
+
 
 
     return (
