@@ -1,3 +1,5 @@
+import { getToken } from "../utils/token";
+
 class Api {
    constructor({ baseUrl, headers }) {
       this._headers = headers
@@ -97,7 +99,7 @@ export const api = new Api({
    headers() {
       return {
          Accept: 'application/json',
-         authorization: `Bearer ${localStorage.getItem('jwt')}`,
+         authorization: `Bearer ${getToken()}`,
          'Content-Type': 'application/json'
       }
    }
