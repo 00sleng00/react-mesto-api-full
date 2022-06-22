@@ -1,7 +1,14 @@
 class Api {
    constructor({ baseUrl, headers }) {
-      this._headers = headers
+      //this._headers = headers
       this._baseUrl = baseUrl
+   }
+
+   get _headers() {
+      return {
+         'Content-Type': 'application/json',
+         authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      }
    }
 
    _checkRequest(res) {
@@ -94,11 +101,11 @@ class Api {
 
 export const api = new Api({
    baseUrl: 'https://api.roman.m.students.nomoreparties.sbs',
-   headers() {
-      return {
-         Accept: 'application/json',
-         authorization: `Bearer ${localStorage.getItem('jwt')}`,
-         'Content-Type': 'application/json'
-      }
-   }
+   // headers() {
+   //    return {
+   //       Accept: 'application/json',
+   //       authorization: `Bearer ${localStorage.getItem('jwt')}`,
+   //       'Content-Type': 'application/json'
+   //    }
+   // }
 });
