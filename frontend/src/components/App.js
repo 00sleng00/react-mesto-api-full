@@ -38,19 +38,41 @@ const App = () => {
 
     const history = useHistory();
 
+    // React.useEffect(() => {
+    //     handleTokenCheck();
+    //     if (isLogin) {
+    //         history.push('/');
+    //         Promise.all([api.getProfile(), api.getInitialCards()])
+    //             .then(([user, cards]) => {
+    //                 setCards(cards.reverse());
+    //                 setCurrentUser(user);
+    //             })
+    //             .catch((err) => console.log(err));
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [isLogin]);
+
     React.useEffect(() => {
-        handleTokenCheck();
-        if (isLogin) {
-            history.push('/');
-            Promise.all([api.getProfile(), api.getInitialCards()])
-                .then(([user, cards]) => {
-                    setCards(cards.reverse());
-                    setCurrentUser(user);
-                })
-                .catch((err) => console.log(err));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isLogin]);
+        const tokenCheck = () => {
+            const jwt = getToken();
+            if (jwt) {
+                auth.getContent(jwt)
+                    .then((res) => {
+                        if (res && res.data.email) {
+                            setData({
+                                email: res.data.email,
+                            });
+                            setIsLogin(true);
+                            history.push("/");
+                        } else {
+                            history.push("/sign-in");
+                        }
+                    })
+                    .catch((err) => console.error(err));
+            }
+        };
+        tokenCheck();
+    }, [history, isLogin]);
 
     function handleCardClick(card) {
         setSelectedCard(card);
@@ -163,22 +185,22 @@ const App = () => {
             });
     };
 
-    function handleTokenCheck() {
-        const token = localStorage.getItem("jwt");
-        if (token) {
-            setIsLogin(true);
-            auth
-                .getContent(token)
-                .then((res) => {
-                    if (res) {
-                        setData(res.email);
-                    }
+    // function handleTokenCheck() {
+    //     const token = localStorage.getItem("jwt");
+    //     if (token) {
+    //         setIsLogin(true);
+    //         auth
+    //             .getContent(token)
+    //             .then((res) => {
+    //                 if (res) {
+    //                     setData(res.email);
+    //                 }
 
-                    history.push('/');
-                })
-                .catch((err) => console.log(err));
-        }
-    }
+    //                 history.push('/');
+    //             })
+    //             .catch((err) => console.log(err));
+    //     }
+    // }
 
     const signOut = () => {
         removeToken();
@@ -190,49 +212,27 @@ const App = () => {
         history.push("/sign-in");
     };
 
-    // React.useEffect(() => {
-    //     const tokenCheck = () => {
-    //         const jwt = getToken();
-    //         if (jwt) {
-    //             auth.getContent(jwt)
-    //                 .then((res) => {
-    //                     if (res && res.data.email) {
-    //                         setData({
-    //                             email: res.data.email,
-    //                         });
-    //                         setIsLogin(true);
-    //                         history.push("/");
-    //                     } else {
-    //                         history.push("/sign-in");
-    //                     }
-    //                 })
-    //                 .catch((err) => console.error(err));
-    //         }
-    //     };
-    //     tokenCheck();
-    // }, [history, isLogin]);
+    React.useEffect(() => {
+        function handleUserInfo() {
+            api.getProfile()
+                .then((item) => {
+                    setCurrentUser(item);
+                })
+                .catch((err) => console.log(`Ошибка: ${err}`));
+        }
+        isLogin && handleUserInfo();
+    }, [isLogin]);
 
-    // React.useEffect(() => {
-    //     function handleUserInfo() {
-    //         api.getProfile()
-    //             .then((item) => {
-    //                 setCurrentUser(item);
-    //             })
-    //             .catch((err) => console.log(`Ошибка: ${err}`));
-    //     }
-    //     isLogin && handleUserInfo();
-    // }, [isLogin]);
-
-    // React.useEffect(() => {
-    //     function initialCards() {
-    //         api.getInitialCards()
-    //             .then((item) => {
-    //                 setCards(item);
-    //             })
-    //             .catch((err) => console.log(`Ошибка: ${err}`));
-    //     }
-    //     isLogin && initialCards();
-    // }, [isLogin]);
+    React.useEffect(() => {
+        function initialCards() {
+            api.getInitialCards()
+                .then((item) => {
+                    setCards(item);
+                })
+                .catch((err) => console.log(`Ошибка: ${err}`));
+        }
+        isLogin && initialCards();
+    }, [isLogin]);
 
 
     return (
