@@ -38,6 +38,26 @@ const App = () => {
 
     const history = useHistory();
 
+    React.useEffect(() => {
+        handleTokenCheck();
+        if (isLogin) {
+            history.push('/');
+            Promise.all([api.getProfile(), api.getInitialCards()])
+                .then(([profileData, cardsData]) => {
+                    const data = {
+                        name: profileData.name,
+                        about: profileData.about,
+                        avatar: profileData.avatar,
+                        _id: profileData._id,
+                    };
+                    setCurrentUser(data);
+                    setCards(cardsData.reverse());
+                })
+                .catch((err) => console.log(err));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLogin]);
+
     const signOut = () => {
         removeToken();
         setData({
@@ -79,28 +99,47 @@ const App = () => {
             });
     };
 
-    React.useEffect(() => {
-        const tokenCheck = () => {
-            const jwt = getToken();
-            if (jwt) {
-                auth.getContent(jwt)
-                    .then((res) => {
-                        if (res && res.data.email) {
-                            setData({
-                                email: res.data.email,
-                            });
-                            setIsLogin(true);
-                            history.push("/");
-                        } else {
-                            history.push("/sign-in");
-                        }
-                    })
-                    .catch((err) => console.error(err));
-            }
-        };
-        tokenCheck();
-    }, [history, isLogin]);
+    // React.useEffect(() => {
+    //     const tokenCheck = () => {
+    //         const jwt = getToken();
+    //         if (jwt) {
+    //             auth.getContent(jwt)
+    //                 .then((res) => {
+    //                     if (res && res.data.email) {
+    //                         setData({
+    //                             email: res.data.email,
+    //                         });
+    //                         setIsLogin(true);
+    //                         history.push("/");
+    //                     } else {
+    //                         history.push("/sign-in");
+    //                     }
+    //                 })
+    //                 .catch((err) => console.error(err));
+    //         }
+    //     };
+    //     tokenCheck();
+    // }, [history, isLogin]);
 
+
+    function handleTokenCheck() {
+        const token = localStorage.getItem("jwt");
+        if (token) {
+            setIsLogin(true);
+            auth
+                .getContent(token)
+                .then((res) => {
+                    if (res) {
+                        setData({
+                            email: res.data.email,
+                        });
+                    }
+
+                    history.push('/');
+                })
+                .catch((err) => console.log(err));
+        }
+    }
 
 
     function handleCardClick(card) {
@@ -184,27 +223,27 @@ const App = () => {
             .catch((err) => console.log(`Ошибка ${err}`));
     };
 
-    React.useEffect(() => {
-        function handleUserInfo() {
-            api.getProfile()
-                .then((item) => {
-                    setCurrentUser(item);
-                })
-                .catch((err) => console.log(`Ошибка: ${err}`));
-        }
-        isLogin && handleUserInfo();
-    }, [isLogin]);
+    // React.useEffect(() => {
+    //     function handleUserInfo() {
+    //         api.getProfile()
+    //             .then((item) => {
+    //                 setCurrentUser(item);
+    //             })
+    //             .catch((err) => console.log(`Ошибка: ${err}`));
+    //     }
+    //     isLogin && handleUserInfo();
+    // }, [isLogin]);
 
-    React.useEffect(() => {
-        function initialCards() {
-            api.getInitialCards()
-                .then((item) => {
-                    setCards(item);
-                })
-                .catch((err) => console.log(`Ошибка: ${err}`));
-        }
-        isLogin && initialCards();
-    }, [isLogin]);
+    // React.useEffect(() => {
+    //     function initialCards() {
+    //         api.getInitialCards()
+    //             .then((item) => {
+    //                 setCards(item);
+    //             })
+    //             .catch((err) => console.log(`Ошибка: ${err}`));
+    //     }
+    //     isLogin && initialCards();
+    // }, [isLogin]);
 
 
     return (
