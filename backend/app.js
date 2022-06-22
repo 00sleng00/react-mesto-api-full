@@ -20,8 +20,8 @@ const app = express();
 
 app.use(helmet());
 app.use(express.json());
-app.use(cors);
 app.use(cookieParser());
+app.use(cors);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
