@@ -80,26 +80,63 @@ const App = () => {
     };
 
     React.useEffect(() => {
-        const tokenCheck = () => {
-            const jwt = getToken();
-            if (jwt) {
-                auth.getContent(jwt)
-                    .then((res) => {
-                        if (res && res.data.email) {
-                            setData({
-                                email: res.data.email,
-                            });
-                            setIsLogin(true);
-                            history.push("/");
-                        } else {
-                            history.push("/sign-in");
-                        }
-                    })
-                    .catch((err) => console.error(err));
-            }
-        };
         tokenCheck();
-    }, [history, isLogin]);
+        // eslint-disable-next-line no-use-before-define
+    }, [tokenCheck])
+
+    const switchToLoggedIn = (email) => {
+        setIsLogin(true);
+        setData(email);
+        history("/");
+        return isLogin
+    };
+
+    React.useEffect(() => {
+        if (isLogin) {
+            Promise.all([api.getInitialCards(), api.getProfile()])
+                .then(([cards, userData]) => {
+                    setCurrentUser(userData);
+                    setCards(cards);
+                })
+                .catch((err) => console.log(err));
+        }
+    }, [isLogin]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const tokenCheck = () => {
+        if (localStorage.getItem('jwt')) {
+            let jwt = localStorage.getItem('jwt');
+            auth
+                .getContent(jwt)
+                .then((res) => {
+                    if (res) {
+                        switchToLoggedIn(res.email);
+                    }
+                })
+        }
+    }
+
+    // React.useEffect(() => {
+    //     const tokenCheck = () => {
+    //         const jwt = getToken();
+    //         if (jwt) {
+    //             auth.getContent(jwt)
+    //                 .then((res) => {
+    //                     if (res && res.data.email) {
+    //                         setData({
+    //                             email: res.data.email,
+    //                         });
+    //                         setIsLogin(true);
+    //                         history.push("/");
+    //                     } else {
+    //                         history.push("/sign-in");
+    //                     }
+    //                 })
+    //                 .catch((err) => console.error(err));
+    //         }
+    //     };
+    //     tokenCheck();
+    // }, [history, isLogin]);
 
 
 
@@ -184,27 +221,27 @@ const App = () => {
             .catch((err) => console.log(`Ошибка ${err}`));
     };
 
-    React.useEffect(() => {
-        function handleUserInfo() {
-            api.getProfile()
-                .then((item) => {
-                    setCurrentUser(item);
-                })
-                .catch((err) => console.log(`Ошибка: ${err}`));
-        }
-        isLogin && handleUserInfo();
-    }, [isLogin]);
+    // React.useEffect(() => {
+    //     function handleUserInfo() {
+    //         api.getProfile()
+    //             .then((item) => {
+    //                 setCurrentUser(item);
+    //             })
+    //             .catch((err) => console.log(`Ошибка: ${err}`));
+    //     }
+    //     isLogin && handleUserInfo();
+    // }, [isLogin]);
 
-    React.useEffect(() => {
-        function initialCards() {
-            api.getInitialCards()
-                .then((item) => {
-                    setCards(item);
-                })
-                .catch((err) => console.log(`Ошибка: ${err}`));
-        }
-        isLogin && initialCards();
-    }, [isLogin]);
+    // React.useEffect(() => {
+    //     function initialCards() {
+    //         api.getInitialCards()
+    //             .then((item) => {
+    //                 setCards(item);
+    //             })
+    //             .catch((err) => console.log(`Ошибка: ${err}`));
+    //     }
+    //     isLogin && initialCards();
+    // }, [isLogin]);
 
 
     return (
