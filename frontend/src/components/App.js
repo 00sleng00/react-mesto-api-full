@@ -43,20 +43,26 @@ const App = () => {
         if (isLogin) {
             history.push('/');
             Promise.all([api.getProfile(), api.getInitialCards()])
-                .then(([profileData, cardsData]) => {
-                    const data = {
-                        name: profileData.name,
-                        about: profileData.about,
-                        avatar: profileData.avatar,
-                        _id: profileData._id,
-                    };
-                    setCurrentUser(data);
-                    setCards(cardsData.reverse());
+                .then(([user, cards]) => {
+                    setCards(cards.reverse());
+                    setCurrentUser(user);
                 })
                 .catch((err) => console.log(err));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLogin]);
+
+    // React.useEffect(() => {
+    //     function initialCards() {
+    //         api.getInitialCards()
+    //             .then((item) => {
+    //                 setCards(item);
+    //             })
+    //             .catch((err) => console.log(`Ошибка: ${err}`));
+    //     }
+    //     isLogin && initialCards();
+    // }, [isLogin]);
+
 
     const signOut = () => {
         removeToken();
