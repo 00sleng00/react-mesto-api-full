@@ -162,7 +162,7 @@ const App = () => {
     };
 
     const handleCardLike = (card) => {
-        const isLiked = card.likes.some(i => i === currentUser._id);
+        const isLiked = card.likes.some((i) => i === currentUser._id);
         const changeLikeCardStatus = !isLiked
             ? api.addLike(card._id)
             : api.deleteLike(card._id);
