@@ -151,7 +151,7 @@ const App = () => {
     };
 
     const handleAddPlaceSubmit = (name, link) => {
-        api.addCard(name, link)
+        return api.addCard(name, link)
             .then((newCard) => {
                 setCards([newCard, ...cards]);
                 closeAllPopups();
@@ -177,7 +177,7 @@ const App = () => {
     // };
 
     const handleCardLike = (card) => {
-            const isLiked = card.likes.some((i) => { return i === currentUser._id});
+        const isLiked = card.likes.some((i) => i === currentUser._id);
 
         api
             .changeLikeCardStatus(card._id, !isLiked)
