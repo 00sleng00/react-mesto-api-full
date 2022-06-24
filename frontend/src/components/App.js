@@ -38,22 +38,6 @@ const App = () => {
 
     const history = useHistory();
 
-    React.useEffect(() => {
-        tokenCheck();
-        if (isLogin) {
-            history.push('/');
-            Promise.all([api.getProfile(), api.getInitialCards()])
-                .then(([user, cards]) => {
-                    setCards(cards);
-                    setCurrentUser(user);
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-        }
-        // eslint-disable-next-line no-use-before-define
-    }, [history, isLogin, tokenCheck]);
-
     const signOut = () => {
         removeToken();
         setData({
@@ -95,26 +79,28 @@ const App = () => {
             });
     };
 
+    React.useEffect(() => {
+        const tokenCheck = () => {
+            const jwt = getToken();
+            if (jwt) {
+                auth.getContent(jwt)
+                    .then((res) => {
+                        if (res && res.email) {
+                            setData({
+                                email: res.email,
+                            });
+                            setIsLogin(true);
+                            history.push("/");
+                        } else {
+                            history.push("/sign-in");
+                        }
+                    })
+                    .catch((err) => console.error(err));
+            }
+        };
+        tokenCheck();
+    }, [history, isLogin]);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const tokenCheck = () => {
-        const jwt = getToken();
-        if (jwt) {
-            auth.getContent(jwt)
-                .then((res) => {
-                    if (res && res.email) {
-                        setData({
-                            email: res.email,
-                        });
-                        setIsLogin(true);
-                        history.push("/");
-                    } else {
-                        history.push("/sign-in");
-                    }
-                })
-                .catch((err) => console.error(err));
-        }
-    };
 
 
     function handleCardClick(card) {
@@ -164,52 +150,45 @@ const App = () => {
             );
     };
 
-    const handleAddPlaceSubmit = (data) => {
-        api.addCard(data.name, data.link).then((newCard) => {
-            setCards([newCard, ...cards]);
-            closeAllPopups();
-        }).catch((err) => {
-            console.log(`Ошибка ${err}`)
-        });
-    }
+    const handleAddPlaceSubmit = (name, link) => {
+        return api.addCard(name, link)
+            .then((newCard) => {
+                setCards([newCard, ...cards]);
+                closeAllPopups();
+            })
+            .catch((err) =>
+                console.log(`Ошибка ${err}`)
+            );
+    };
 
-    // const handleAddPlaceSubmit = (name, link) => {
-    //     return api.addCard(name, link)
+    // const handleCardLike = (card) => {
+    //     const isLiked = card.likes.some(i => i === currentUser._id);
+
+    //     const changeLikeCardStatus = !isLiked
+    //         ? api.addLike(card._id)
+    //         : api.deleteLike(card._id);
+    //     changeLikeCardStatus
     //         .then((newCard) => {
-    //             setCards([newCard, ...cards]);
-    //             closeAllPopups();
+    //             setCards((item) =>
+    //                 item.map((c) => (c._id === card._id ? newCard : c))
+    //             );
     //         })
-    //         .catch((err) =>
-    //             console.log(`Ошибка ${err}`)
-    //         );
+    //         .catch((err) => console.log(`Ошибка ${err}`));
     // };
 
     const handleCardLike = (card) => {
-        const isLiked = card.likes.some(i => i === currentUser._id);
+        const isLiked = card.likes.some((i) => i === currentUser._id);
 
-        const changeLikeCardStatus = !isLiked
-            ? api.addLike(card._id)
-            : api.deleteLike(card._id);
-        changeLikeCardStatus
+        api
+            .changeLikeCardStatus(card._id, !isLiked)
             .then((newCard) => {
                 setCards((item) =>
                     item.map((c) => (c._id === card._id ? newCard : c))
                 );
             })
             .catch((err) => console.log(`Ошибка ${err}`));
-    };
+    }
 
-    // const handleCardLike = (card) => {
-    //     const isLiked = card.likes.some((i) => i === currentUser._id);
-    //     api.changeLikeCardStatus(card._id, isLiked)
-    //         .then((newCard) => {
-    //             const newCards = cards.map((c) => (c._id === card._id ? newCard.data : c));
-    //             setCards(newCards);
-    //         })
-    //         .catch((res) => {
-    //             console.log(res);
-    //         });
-    // }
 
     const handleCardDelete = (card) => {
         api.deleteCard(card._id)
@@ -219,27 +198,27 @@ const App = () => {
             .catch((err) => console.log(`Ошибка ${err}`));
     };
 
-    // React.useEffect(() => {
-    //     function handleUserInfo() {
-    //         api.getProfile()
-    //             .then((item) => {
-    //                 setCurrentUser(item);
-    //             })
-    //             .catch((err) => console.log(`Ошибка: ${err}`));
-    //     }
-    //     isLogin && handleUserInfo();
-    // }, [isLogin]);
+    React.useEffect(() => {
+        function handleUserInfo() {
+            api.getProfile()
+                .then((item) => {
+                    setCurrentUser(item);
+                })
+                .catch((err) => console.log(`Ошибка: ${err}`));
+        }
+        isLogin && handleUserInfo();
+    }, [isLogin]);
 
-    // React.useEffect(() => {
-    //     function initialCards() {
-    //         api.getInitialCards()
-    //             .then((item) => {
-    //                 setCards(item);
-    //             })
-    //             .catch((err) => console.log(`Ошибка: ${err}`));
-    //     }
-    //     isLogin && initialCards();
-    // }, [isLogin]);
+    React.useEffect(() => {
+        function initialCards() {
+            api.getInitialCards()
+                .then((item) => {
+                    setCards(item);
+                })
+                .catch((err) => console.log(`Ошибка: ${err}`));
+        }
+        isLogin && initialCards();
+    }, [isLogin]);
 
 
 
