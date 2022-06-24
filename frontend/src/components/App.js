@@ -184,32 +184,32 @@ const App = () => {
     //         );
     // };
 
-    // const handleCardLike = (card) => {
-    //     const isLiked = card.likes.some(i => i === currentUser._id);
-
-    //     const changeLikeCardStatus = !isLiked
-    //         ? api.addLike(card._id)
-    //         : api.deleteLike(card._id);
-    //     changeLikeCardStatus
-    //         .then((newCard) => {
-    //             setCards((item) =>
-    //                 item.map((c) => (c._id === card._id ? newCard : c))
-    //             );
-    //         })
-    //         .catch((err) => console.log(`Ошибка ${err}`));
-    // };
-
     const handleCardLike = (card) => {
-        const isLiked = card.likes.some((i) => i === currentUser._id);
-        api.changeLikeCardStatus(card._id, isLiked)
+        const isLiked = card.likes.some(i => i === currentUser._id);
+
+        const changeLikeCardStatus = !isLiked
+            ? api.addLike(card._id)
+            : api.deleteLike(card._id);
+        changeLikeCardStatus
             .then((newCard) => {
-                const newCards = cards.map((c) => (c._id === card._id ? newCard.data : c));
-                setCards(newCards);
+                setCards((item) =>
+                    item.map((c) => (c._id === card._id ? newCard : c))
+                );
             })
-            .catch((res) => {
-                console.log(res);
-            });
-    }
+            .catch((err) => console.log(`Ошибка ${err}`));
+    };
+
+    // const handleCardLike = (card) => {
+    //     const isLiked = card.likes.some((i) => i === currentUser._id);
+    //     api.changeLikeCardStatus(card._id, isLiked)
+    //         .then((newCard) => {
+    //             const newCards = cards.map((c) => (c._id === card._id ? newCard.data : c));
+    //             setCards(newCards);
+    //         })
+    //         .catch((res) => {
+    //             console.log(res);
+    //         });
+    // }
 
     const handleCardDelete = (card) => {
         api.deleteCard(card._id)
