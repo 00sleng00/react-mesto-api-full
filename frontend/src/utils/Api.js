@@ -1,4 +1,5 @@
 import { getToken } from "../utils/token";
+
 class Api {
    constructor({ baseUrl, headers }) {
       this._headers = headers
@@ -74,11 +75,11 @@ class Api {
 
    }
 
-   changeLikeCardStatus(id, cardLikeStatus) {
+   changeLikeCardStatus(id, isLiked) {
       return fetch(`${this._baseUrl}/cards/${id}/likes/`, {
-         method: cardLikeStatus ? "PUT" : "DELETE",
-         headers: this._headers,
-      }).then(this._checkRequest)
+         method: isLiked ? "PUT" : "DELETE",
+         headers: this._headers(),
+      }).then(this._checkRequest);
    }
 
    // deleteLike(id) {
@@ -101,7 +102,7 @@ class Api {
 }
 
 export const api = new Api({
-   baseUrl: 'https://api.roman.m.students.nomoreparties.sbs',
+   baseUrl: "https://api.roman.m.students.nomoreparties.sbs",
    headers() {
       return {
          Accept: 'application/json',
