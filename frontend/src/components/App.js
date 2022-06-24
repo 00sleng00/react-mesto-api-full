@@ -151,7 +151,7 @@ const App = () => {
     };
 
     const handleAddPlaceSubmit = (name, link) => {
-        return api.addCard(name, link)
+    return    api.addCard(name, link)
             .then((newCard) => {
                 setCards([newCard, ...cards]);
                 closeAllPopups();
@@ -161,33 +161,19 @@ const App = () => {
             );
     };
 
-    // const handleCardLike = (card) => {
-    //     const isLiked = card.likes.some(i => i === currentUser._id);
-
-    //     const changeLikeCardStatus = !isLiked
-    //         ? api.addLike(card._id)
-    //         : api.deleteLike(card._id);
-    //     changeLikeCardStatus
-    //         .then((newCard) => {
-    //             setCards((item) =>
-    //                 item.map((c) => (c._id === card._id ? newCard : c))
-    //             );
-    //         })
-    //         .catch((err) => console.log(`Ошибка ${err}`));
-    // };
-
     const handleCardLike = (card) => {
         const isLiked = card.likes.some((i) => i === currentUser._id);
-
-        api
-            .changeLikeCardStatus(card._id, !isLiked)
+        const changeLikeCardStatus = !isLiked
+            ? api.addLike(card._id)
+            : api.deleteLike(card._id);
+        changeLikeCardStatus
             .then((newCard) => {
                 setCards((item) =>
                     item.map((c) => (c._id === card._id ? newCard : c))
                 );
             })
             .catch((err) => console.log(`Ошибка ${err}`));
-    }
+    };
 
 
     const handleCardDelete = (card) => {
@@ -219,7 +205,6 @@ const App = () => {
         }
         isLogin && initialCards();
     }, [isLogin]);
-
 
 
     return (

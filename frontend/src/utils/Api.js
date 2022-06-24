@@ -1,5 +1,4 @@
 import { getToken } from "../utils/token";
-
 class Api {
    constructor({ baseUrl, headers }) {
       this._headers = headers
@@ -42,7 +41,7 @@ class Api {
          .then(this._checkRequest)
    }
 
-   editAvatar({ avatar }) {
+   editAvatar({avatar}) {
       return fetch(`${this._baseUrl}/users/me/avatar`, {
          method: "PATCH",
          headers: this._headers(),
@@ -75,34 +74,27 @@ class Api {
 
    }
 
-   changeLikeCardStatus(id, isLiked) {
-      return fetch(`${this._baseUrl}/cards/${id}/likes/`, {
-         method: isLiked ? "PUT" : "DELETE",
-         headers: this._headers(),
-      }).then(this._checkRequest);
+   deleteLike(id) {
+      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+         method: "DELETE",
+         headers: this._headers()
+      })
+         .then(this._checkRequest)
+
    }
 
-   // deleteLike(id) {
-   //    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-   //       method: "DELETE",
-   //       headers: this._headers()
-   //    })
-   //       .then(this._checkRequest)
+   addLike(id) {
+      return fetch(`${this._baseUrl}/cards/${id}/likes`, {
+         method: "PUT",
+         headers: this._headers()
+      })
+         .then(this._checkRequest)
 
-   // }
-
-   // addLike(id) {
-   //    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
-   //       method: "PUT",
-   //       headers: this._headers()
-   //    })
-   //       .then(this._checkRequest)
-
-   // }
+   }
 }
 
-export const api = new Api({
-   baseUrl: "https://api.roman.m.students.nomoreparties.sbs",
+export const api = new Api ({
+   baseUrl: 'https://api.roman.m.students.nomoreparties.sbs',
    headers() {
       return {
          Accept: 'application/json',
