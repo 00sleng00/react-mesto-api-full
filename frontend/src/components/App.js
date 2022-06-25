@@ -169,7 +169,7 @@ const App = () => {
     const handleAddPlaceSubmit = (name, link) => {
         api.addCard(name, link)
             .then((newCard) => {
-                setCards([newCard.card, ...cards]);
+                setCards([newCard.card._id, ...cards]);
                 closeAllPopups();
             })
             .catch((err) =>
