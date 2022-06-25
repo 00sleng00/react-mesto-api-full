@@ -1,0 +1,6 @@
+.infoTooltip__img {
+  object-fit: contain;
+  object-position: center;
+  width: 120px;
+  height: 120px;
+}

@@ -1,0 +1,24 @@
+.header__burger-menu {
+  visibility: hidden;
+  display: flex;
+  gap: 24px;
+  visibility: visible;
+  transition: .3s;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 540px) {
+  .header__burger-menu {
+    gap: 18px;
+    flex-direction: column;
+    display: none;
+    border-bottom: 1px solid rgba(84, 84, 84, .7);
+    align-items: center;
+    padding: 40px 0;
+  }
+}
+
+.header__burger-menu:hover {
+  transition: .3s;
+  opacity: 0.8;
+}

@@ -1,0 +1,7 @@
+.pop-up__fullsize-photo {
+  width: 100%;
+  max-width: 75vw;
+  max-height: 75vh;
+  position: relative;
+
+}

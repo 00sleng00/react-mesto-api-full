@@ -1,0 +1,18 @@
+.header__burger-button {
+  background-image: url(../../../images/burger-menu.svg);
+  background-color: transparent;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  max-width: 24px;
+  width: 100%;
+  height: 18px;
+  border: none;
+  display: none;
+}
+
+@media screen and (max-width: 540px) {
+  .header__burger-button {
+    display: block;
+  }
+}

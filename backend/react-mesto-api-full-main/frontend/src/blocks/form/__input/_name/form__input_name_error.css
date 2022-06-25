@@ -1,0 +1,4 @@
+.form__input_name_error {
+  outline: none;
+  border-bottom: red solid 1px;
+}

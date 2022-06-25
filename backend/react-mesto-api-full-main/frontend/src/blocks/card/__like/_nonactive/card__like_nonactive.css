@@ -1,0 +1,5 @@
+.card__like_nonactive {
+  background: transparent url(../../../../images/like.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}

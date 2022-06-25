@@ -1,5 +1,5 @@
 class NotFoundError extends Error {
-  constructor(message = 'Cannot read properties of undefined') {
+  constructor(message) {
     super(message);
     this.statusCode = 404;
   }

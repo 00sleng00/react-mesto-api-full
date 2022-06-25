@@ -1,0 +1,13 @@
+.auth__form {
+  width: 358px;
+  margin: auto;
+  padding-top: 44px;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+@media screen and (max-width: 540px) {
+  .auth__form {
+    width: 100%;
+    padding-top: 37px;
+  }
+}
