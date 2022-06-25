@@ -161,7 +161,7 @@ const App = () => {
             );
     };
 
-    const handleCardLike = (card) => {
+    function handleCardLike  (card)  {
         const isLiked = card.likes.some(i => i === currentUser._id);
 
         const changeLikeCardStatus = !isLiked
