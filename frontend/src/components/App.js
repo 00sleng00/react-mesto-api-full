@@ -150,7 +150,7 @@ const App = () => {
             );
     };
 
-    const handleUpdateAvatar = ({ avatar }) => {
+    const handleUpdateAvatar = ( avatar ) => {
         api.editAvatar(avatar)
             .then((item) => {
                 setCurrentUser(item);
