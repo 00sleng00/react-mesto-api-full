@@ -128,10 +128,10 @@ const App = () => {
     }
 
 
-    const handleUpdateUser = (name, about) => {
+    const handleUpdateUser = ({name, about}) => {
         api.editProfile(name, about)
             .then(() => {
-                setCurrentUser(name, about);
+                setCurrentUser({name, about});
                 closeAllPopups();
             })
             .catch((err) =>
@@ -139,10 +139,10 @@ const App = () => {
             );
     };
 
-    const handleUpdateAvatar = (avatar) => {
+    const handleUpdateAvatar = ({avatar}) => {
         api.editAvatar(avatar)
             .then(() => {
-                setCurrentUser(avatar);
+                setCurrentUser({avatar});
                 closeAllPopups();
             })
             .catch((err) =>
