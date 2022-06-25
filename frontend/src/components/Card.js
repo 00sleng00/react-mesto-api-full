@@ -7,15 +7,15 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
 
    const isOwn = card.owner === currentUser._id;
 
-   const cardDeleteButtonClassName = (
+   const cardDeleteButtonClassName = 
       `card__delete ${isOwn ? '' : 'card__delete_hidden'}`
-   );
+   ;
 
-   const isLiked = card.likes.some((i) => i === currentUser._id);
+   const isLiked = card.likes.some(i => i === currentUser._id);
 
-   const cardLikeButtonClassName = (
+   const cardLikeButtonClassName = 
       `card__like ${isLiked && 'card__like_active'}`
-   );
+   ;
 
    const handleClick = () => {
       onCardClick(card);

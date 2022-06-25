@@ -150,18 +150,7 @@ const App = () => {
             );
     };
 
-    const handleAddPlaceSubmit = (name, link) => {
-        return api.addCard(name, link)
-            .then((newCard) => {
-                setCards([newCard, ...cards]);
-                closeAllPopups();
-            })
-            .catch((err) =>
-                console.log(`Ошибка ${err}`)
-            );
-    };
-
-    function handleCardLike  (card)  {
+    function handleCardLike(card) {
         const isLiked = card.likes.some(i => i === currentUser._id);
 
         const changeLikeCardStatus = !isLiked
@@ -170,10 +159,22 @@ const App = () => {
         changeLikeCardStatus
             .then((newCard) => {
                 setCards((item) =>
-                    item.map((c) => (c._id === card._id ? newCard : c))
+                    item.map((c) => (c._id === card._id ? newCard.card : c))
                 );
             })
             .catch((err) => console.log(`Ошибка ${err}`));
+    };
+
+
+    const handleAddPlaceSubmit = (name, link) => {
+        api.addCard(name, link)
+            .then((newCard) => {
+                setCards([newCard.card, ...cards]);
+                closeAllPopups();
+            })
+            .catch((err) =>
+                console.log(`Ошибка ${err}`)
+            );
     };
 
     // const handleCardLike = (card) => {
