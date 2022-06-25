@@ -1,93 +1,87 @@
 require('dotenv').config();
 
+console.log(process.env.NODE_ENV);
 const express = require('express');
 const mongoose = require('mongoose');
-const cookieParser = require('cookie-parser');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const cors = require('cors');
-const { errors, celebrate, Joi } = require('celebrate');
-
-const { PORT = 3000 } = process.env;
-const { userRoutes } = require('./routes/users');
-const { cardRoutes } = require('./routes/cards');
-const { createUser, login } = require('./controllers/users');
-const auth = require('./middlewares/auth');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { celebrate, Joi } = require('celebrate');
+const { errors } = require('celebrate');
+const cors = require('./middlewares/cors');
+const { userRouter } = require('./routes/users');
+const { cardRouter } = require('./routes/cards');
 const NotFoundError = require('./errors/NotFoundError');
+const errorHandler = require('./middlewares/errorHandler');
+const { reg } = require('./utils/isLink');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+
+const {
+  login,
+  createUser,
+} = require('./controllers/users');
+const { auth } = require('./middlewares/auth');
 
 const app = express();
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
-
-const corsOptions = {
-  origin: '*',
-  credentials: true,
-  optionSuccessStatus: 200,
-};
-
-app.use(cors(corsOptions));
-app.use(helmet());
-app.use(cookieParser());
 app.use(express.json());
-mongoose.connect('mongodb://localhost:27017/mestodb');
-app.use(cors());
-app.use(requestLogger);
-app.use(limiter);
+app.use(cors);
 
+// request logger must be connected before all route handlers
+app.use(requestLogger);
+
+// crash test
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
 
-app.post('/signup', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(/https?:\/\/(www\.)?[-a-zA-z0-9@:%_\\+.~#?&=]+\.[a-zA-Z0-9()]+([-a-zA-Z0-9()@:%_\\+.~#?&=]*)/),
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
+// routes w/o auth
+app.post(
+  '/signin',
+  celebrate({
+    body: Joi.object().keys({
+      email: Joi.string().required().email(),
+      password: Joi.string().required(),
+    }),
   }),
-}), createUser);
-
-app.post('/signin', celebrate({
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required(),
+  login,
+);
+app.post(
+  '/signup',
+  celebrate({
+    body: Joi.object().keys({
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
+      avatar: Joi.string().pattern(reg),
+      email: Joi.string().required().email(),
+      password: Joi.string().required(),
+    }),
   }),
-}), login);
+  createUser,
+);
 
-app.use(auth);
+// routes w/ auth
+app.use('/users', auth, userRouter);
+app.use('/cards', auth, cardRouter);
 
-app.use('/users', auth, userRoutes);
-app.use('/cards', auth, cardRoutes);
-
-app.all('*', auth, (_req, _res, next) => {
-  next(new NotFoundError('Страница не  найдена'));
+app.use((req, res, next) => {
+  next(new NotFoundError('Такого адреса не существует'));
 });
 
+mongoose.connect('mongodb://localhost:27017/mestodb', {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  autoIndex: true,
+});
+
+// error logger connect after the route handlers and before the error handlers
 app.use(errorLogger);
+
 app.use(errors());
 
-app.listen(PORT, () => {
-  // eslint-disable-next-line
-  console.log(`Поключён ${PORT} порт`);
-});
+app.use(errorHandler);
 
-app.use((err, _req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-  next();
+const { PORT = 3000 } = process.env;
+
+app.listen(PORT, () => {
+  console.log('Server has been started');
 });

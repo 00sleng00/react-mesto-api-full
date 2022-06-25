@@ -1,25 +1,25 @@
 const jwt = require('jsonwebtoken');
-const AuthorizationError = require('../errors/AuthorizationError');
+const { JWT_SECRET } = require('../utils/jwt');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
-
-module.exports = (req, __, next) => {
+// eslint-disable-next-line consistent-return
+module.exports.auth = (req, res, next) => {
   const { authorization } = req.headers;
-
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw new AuthorizationError('Необходима авторизация');
+  // if (!authorization || !authorization.startsWith('Bearer '))
+  if (!authorization) {
+    return next(new UnauthorizedError('Did not find authorization header.'));
   }
 
   const token = authorization.replace('Bearer ', '');
   let payload;
 
   try {
-    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
+    payload = jwt.verify(token, JWT_SECRET);
   } catch (err) {
-    throw new AuthorizationError('Необходима авторизация');
+    return next(new UnauthorizedError('Error Parsing JWT token.'));
   }
 
-  req.user = payload;
+  req.user = payload; // записываем пейлоуд в объект запроса
 
-  return next();
+  next(); // пропускаем запрос дальше
 };
