@@ -128,7 +128,7 @@ const App = () => {
     }
 
 
-    const handleUpdateUser = ({name, about}) => {
+    const handleUpdateUser = (name, about) => {
         api.editProfile(name, about)
             .then((item) => {
                 setCurrentUser(item);
@@ -139,7 +139,7 @@ const App = () => {
             );
     };
 
-    const handleUpdateAvatar = ({avatar}) => {
+    const handleUpdateAvatar = (avatar) => {
         api.editAvatar(avatar)
             .then((item) => {
                 setCurrentUser(item);
