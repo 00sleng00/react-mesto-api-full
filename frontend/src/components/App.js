@@ -128,6 +128,28 @@ const App = () => {
     }
 
 
+    React.useEffect(() => {
+        function handleUserInfo() {
+            api.getProfile()
+                .then((item) => {
+                    setCurrentUser(item);
+                })
+                .catch((err) => console.log(`Ошибка: ${err}`));
+        }
+        isLogin && handleUserInfo();
+    }, [isLogin]);
+
+    React.useEffect(() => {
+        function initialCards() {
+            api.getInitialCards()
+                .then((item) => {
+                    setCards(item);
+                })
+                .catch((err) => console.log(`Ошибка: ${err}`));
+        }
+        isLogin && initialCards();
+    }, [isLogin]);
+
     const handleUpdateUser = (name, about) => {
         api.editProfile(name, about)
             .then((item) => {
@@ -169,27 +191,14 @@ const App = () => {
     const handleAddPlaceSubmit = (name, link) => {
         api.addCard(name, link)
             .then((newCard) => {
-                setCards([newCard.card._id, ...cards]);
+                console.log('newCard', newCard)
+                setCards([newCard, ...cards]); 
                 closeAllPopups();
             })
             .catch((err) =>
                 console.log(`Ошибка ${err}`)
             );
     };
-
-    // const handleCardLike = (card) => {
-    //     const isLiked = card.likes.some((i) => i === currentUser._id);
-
-    //     api
-    //         .changeLikeCardStatus(card._id, !isLiked)
-    //         .then((newCard) => {
-    //             setCards((item) =>
-    //                 item.map((c) => (c._id === card._id ? newCard : c))
-    //             );
-    //         })
-    //         .catch((err) => console.log(`Ошибка ${err}`));
-    // }
-
 
     const handleCardDelete = (card) => {
         api.deleteCard(card._id)
@@ -198,30 +207,6 @@ const App = () => {
             })
             .catch((err) => console.log(`Ошибка ${err}`));
     };
-
-    React.useEffect(() => {
-        function handleUserInfo() {
-            api.getProfile()
-                .then((item) => {
-                    setCurrentUser(item);
-                })
-                .catch((err) => console.log(`Ошибка: ${err}`));
-        }
-        isLogin && handleUserInfo();
-    }, [isLogin]);
-
-    React.useEffect(() => {
-        function initialCards() {
-            api.getInitialCards()
-                .then((item) => {
-                    setCards(item);
-                })
-                .catch((err) => console.log(`Ошибка: ${err}`));
-        }
-        isLogin && initialCards();
-    }, [isLogin]);
-
-
 
     return (
         <div className="page">

@@ -15,9 +15,7 @@ const createCard = (req, res, next) => {
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => {
-      res.status(201).send({
-        name: card.name, link: card.link, owner: card.owner, _id: card._id,
-      });
+      res.status(201).send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -59,7 +57,7 @@ const likeCard = (req, res, next) => {
       if (!card) {
         return next(new NotFoundError('Карточка не найдена'));
       }
-      return res.status(200).send({ card, likes: card.likes.length });
+      return res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -80,7 +78,7 @@ const dislikeCard = (req, res, next) => {
       if (!card) {
         return next(new NotFoundError('Карточка не найдена'));
       }
-      return res.status(200).send({ card, likes: card.likes.length });
+      return res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
