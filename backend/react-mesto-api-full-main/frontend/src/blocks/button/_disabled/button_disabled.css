@@ -1,9 +1,0 @@
-.button_disabled {
-  color: rgba(0, 0, 0, 1);
-  opacity: 0.2;
-  background-color: rgba(246, 246, 246, 1);
-  border: solid black 1px;
-  cursor: default;
-  pointer-events: none;
-  user-select: none;
-}
