@@ -128,49 +128,27 @@ const App = () => {
     }
 
 
-    // const handleUpdateUser = (name, about) => {
-    //     api.editProfile(name, about)
-    //         .then((item) => {
-    //             setCurrentUser(item);
-    //             closeAllPopups();
-    //         })
-    //         .catch((err) =>
-    //             console.log(`Ошибка ${err}`)
-    //         );
-    // };
-
-    // const handleUpdateAvatar = (avatar) => {
-    //     api.editAvatar(avatar)
-    //         .then((item) => {
-    //             setCurrentUser(item);
-    //             closeAllPopups();
-    //         })
-    //         .catch((err) =>
-    //             console.log(`Ошибка ${err}`)
-    //         );
-    // };
-
-    function handleUpdateUser({ name, about }) {
+    const handleUpdateUser = (name, about) => {
         api.editProfile(name, about)
             .then(() => {
-                setCurrentUser({ ...currentUser, name, about })
-                closeAllPopups()
+                setCurrentUser(name, about);
+                closeAllPopups();
             })
             .catch((err) =>
                 console.log(`Ошибка ${err}`)
             );
-    }
+    };
 
-    function handleUpdateAvatar({ avatar }) {
+    const handleUpdateAvatar = (avatar) => {
         api.editAvatar(avatar)
             .then(() => {
-                setCurrentUser({ ...currentUser, avatar })
-                closeAllPopups()
+                setCurrentUser(avatar);
+                closeAllPopups();
             })
             .catch((err) =>
                 console.log(`Ошибка ${err}`)
             );
-    }
+    };
 
 
     function handleCardLike(card) {
