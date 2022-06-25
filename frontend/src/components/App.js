@@ -139,10 +139,10 @@ const App = () => {
             );
     };
 
-    const handleUpdateAvatar = ({avatar}) => {
+    const handleUpdateAvatar = (avatar) => {
         api.editAvatar(avatar)
-            .then(() => {
-                setCurrentUser({ ...currentUser, avatar});
+            .then((item) => {
+                setCurrentUser(item);
                 closeAllPopups();
             })
             .catch((err) =>
