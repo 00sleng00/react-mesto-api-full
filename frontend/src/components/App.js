@@ -216,29 +216,6 @@ const App = () => {
             .catch((err) => console.log(`Ошибка ${err}`));
     };
 
-    // React.useEffect(() => {
-    //     function handleUserInfo() {
-    //         api.getProfile()
-    //             .then((item) => {
-    //                 setCurrentUser(item);
-    //             })
-    //             .catch((err) => console.log(`Ошибка: ${err}`));
-    //     }
-    //     isLogin && handleUserInfo();
-    // }, [isLogin]);
-
-    // React.useEffect(() => {
-    //     function initialCards() {
-    //         api.getInitialCards()
-    //             .then((item) => {
-    //                 setCards(item);
-    //             })
-    //             .catch((err) => console.log(`Ошибка: ${err}`));
-    //     }
-    //     isLogin && initialCards();
-    // }, [isLogin]);
-
-
 
     return (
         <div className="page">
