@@ -49,7 +49,7 @@ const App = () => {
                 setCurrentUser(data)
                 setCards(cardList.reverse())
             })
-            .catch((err) => console.log(`Ошибка: ${err}`));
+                .catch((err) => console.log(`Ошибка: ${err}`));
         }
     }, [isLogin])
 
@@ -141,8 +141,11 @@ const App = () => {
 
     const handleUpdateUser = (name, about) => {
         api.editProfile(name, about)
-            .then((item) => {
-                setCurrentUser(item);
+            .then(({ name, about }) => {
+                setCurrentUser((prevUserState) => {
+                    return { ...prevUserState, name, about };
+                });
+
                 closeAllPopups();
             })
             .catch((err) =>
@@ -150,10 +153,12 @@ const App = () => {
             );
     };
 
-    const handleUpdateAvatar = ( avatar ) => {
-        api.editAvatar(avatar)
-            .then((item) => {
-                setCurrentUser(item);
+    const handleUpdateAvatar = (avatar) => {
+        api.editAvatar( avatar )
+            .then(({ avatar }) => {
+                setCurrentUser((prevUserState) => {
+                    return { ...prevUserState, avatar };
+                });
                 closeAllPopups();
             })
             .catch((err) =>
