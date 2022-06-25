@@ -128,8 +128,8 @@ const App = () => {
     }
 
 
-    const handleUpdateUser = (name, about) => {
-        api.editProfile(name, about)
+    const handleUpdateUser = (data) => {
+        api.editProfile(data)
             .then((item) => {
                 setCurrentUser(item);
                 closeAllPopups();
@@ -149,6 +149,7 @@ const App = () => {
                 console.log(`Ошибка ${err}`)
             );
     };
+
 
     function handleCardLike(card) {
         const isLiked = card.likes.some(i => i === currentUser._id);
